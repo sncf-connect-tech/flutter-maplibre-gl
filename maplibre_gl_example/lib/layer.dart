@@ -39,118 +39,158 @@ class LayerState extends State {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(children: <Widget>[
-      Center(
-        child: SizedBox(
-            height: 400.0,
-            child: MapLibreMap(
-              dragEnabled: false,
-              myLocationEnabled: true,
-              onMapCreated: _onMapCreated,
-              onMapClick: (point, latLong) =>
-                  debugPrint(point.toString() + latLong.toString()),
-              onStyleLoadedCallback: _onStyleLoadedCallback,
-              initialCameraPosition: const CameraPosition(
-                target: center,
-                zoom: 11.0,
+    return Column(
+      children: [
+        Expanded(
+          child: Center(
+            child: SizedBox(
+                height: 400.0,
+                child: MapLibreMap(
+                  dragEnabled: false,
+                  myLocationEnabled: true,
+                  onMapCreated: _onMapCreated,
+                  onMapClick: (point, latLong) {
+                    debugPrint(point.toString() + latLong.toString());
+                  },
+                  onStyleLoadedCallback: _onStyleLoadedCallback,
+                  initialCameraPosition: const CameraPosition(
+                    target: center,
+                    zoom: 11.0,
+                  ),
+                )),
+          ),
+        ),
+        SingleChildScrollView(
+          child: Column(
+            children: [
+              TextButton(
+                onPressed: () async {
+                  await controller
+                      .setLayerProperties(
+                        "lines",
+                        LineLayerProperties.fromJson(
+                          {"visibility": linesVisible ? "none" : "visible"},
+                        ),
+                      )
+                      .then(
+                        (value) => setState(() => linesVisible = !linesVisible),
+                      );
+                },
+                child: const Text('toggle line visibility'),
               ),
-              annotationOrder: const [],
-            )),
-      ),
-      TextButton(
-        onPressed: () {
-          controller
-              .setLayerProperties(
-                  "lines",
-                  LineLayerProperties.fromJson(
-                      {"visibility": linesVisible ? "none" : "visible"}))
-              .then((value) => setState(() => linesVisible = !linesVisible));
-        },
-        child: const Text('toggle line visibility'),
-      ),
-      TextButton(
-        onPressed: () {
-          controller
-              .setLayerProperties(
-                  "lines",
-                  LineLayerProperties.fromJson(
-                      {"line-color": linesRed ? "#0000ff" : "#ff0000"}))
-              .then((value) => setState(() => linesRed = !linesRed));
-        },
-        child: const Text('toggle line color'),
-      ),
-      TextButton(
-        onPressed: () {
-          controller
-              .setLayerProperties(
-                  "fills",
-                  FillLayerProperties.fromJson(
-                      {"visibility": fillsVisible ? "none" : "visible"}))
-              .then((value) => setState(() => fillsVisible = !fillsVisible));
-        },
-        child: const Text('toggle fill visibility'),
-      ),
-      TextButton(
-        onPressed: () {
-          controller
-              .setLayerProperties(
-                  "fills",
-                  FillLayerProperties.fromJson(
-                      {"fill-color": fillsRed ? "#0000ff" : "#ff0000"}))
-              .then((value) => setState(() => fillsRed = !fillsRed));
-        },
-        child: const Text('toggle fill color'),
-      ),
-      TextButton(
-        onPressed: () {
-          controller
-              .setLayerProperties(
-                  "circles",
-                  CircleLayerProperties.fromJson(
-                      {"visibility": circlesVisible ? "none" : "visible"}))
-              .then(
-                  (value) => setState(() => circlesVisible = !circlesVisible));
-        },
-        child: const Text('toggle circle visibility'),
-      ),
-      TextButton(
-        onPressed: () {
-          controller
-              .setLayerProperties(
-                  "circles",
-                  CircleLayerProperties.fromJson(
-                      {"circle-color": circlesRed ? "#0000ff" : "#ff0000"}))
-              .then((value) => setState(() => circlesRed = !circlesRed));
-        },
-        child: const Text('toggle circle color'),
-      ),
-      TextButton(
-        onPressed: () {
-          controller
-              .setLayerProperties(
-                  "symbols",
-                  SymbolLayerProperties.fromJson(
-                      {"visibility": symbolsVisible ? "none" : "visible"}))
-              .then(
-                  (value) => setState(() => symbolsVisible = !symbolsVisible));
-        },
-        child: const Text('toggle (non-moving) symbols visibility'),
-      ),
-    ]);
+              TextButton(
+                onPressed: () async {
+                  await controller
+                      .setLayerProperties(
+                        "lines",
+                        LineLayerProperties.fromJson(
+                          {"line-color": linesRed ? "#0000ff" : "#ff0000"},
+                        ),
+                      )
+                      .then((value) => setState(() => linesRed = !linesRed));
+                },
+                child: const Text('toggle line color'),
+              ),
+              TextButton(
+                onPressed: () async {
+                  await controller
+                      .setLayerProperties(
+                        "fills",
+                        FillLayerProperties.fromJson(
+                          {"visibility": fillsVisible ? "none" : "visible"},
+                        ),
+                      )
+                      .then(
+                        (value) => setState(() => fillsVisible = !fillsVisible),
+                      );
+                },
+                child: const Text('toggle fill visibility'),
+              ),
+              TextButton(
+                onPressed: () async {
+                  await controller
+                      .setLayerProperties(
+                        "fills",
+                        FillLayerProperties.fromJson(
+                          {"fill-color": fillsRed ? "#0000ff" : "#ff0000"},
+                        ),
+                      )
+                      .then(
+                        (value) => setState(() => fillsRed = !fillsRed),
+                      );
+                },
+                child: const Text('toggle fill color'),
+              ),
+              TextButton(
+                onPressed: () async {
+                  await controller
+                      .setLayerProperties(
+                        "circles",
+                        CircleLayerProperties.fromJson(
+                          {"visibility": circlesVisible ? "none" : "visible"},
+                        ),
+                      )
+                      .then(
+                        (value) =>
+                            setState(() => circlesVisible = !circlesVisible),
+                      );
+                },
+                child: const Text('toggle circle visibility'),
+              ),
+              TextButton(
+                onPressed: () async {
+                  await controller
+                      .setLayerProperties(
+                        "circles",
+                        CircleLayerProperties.fromJson(
+                          {"circle-color": circlesRed ? "#0000ff" : "#ff0000"},
+                        ),
+                      )
+                      .then(
+                        (value) => setState(() => circlesRed = !circlesRed),
+                      );
+                },
+                child: const Text('toggle circle color'),
+              ),
+              TextButton(
+                onPressed: () async {
+                  await controller
+                      .setLayerProperties(
+                        "symbols",
+                        SymbolLayerProperties.fromJson(
+                          {"visibility": symbolsVisible ? "none" : "visible"},
+                        ),
+                      )
+                      .then(
+                        (value) =>
+                            setState(() => symbolsVisible = !symbolsVisible),
+                      );
+                },
+                child: const Text('toggle (non-moving) symbols visibility'),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 
   void _onMapCreated(MapLibreMapController controller) {
     this.controller = controller;
-
     controller.onFeatureTapped.add(onFeatureTap);
   }
 
   void onFeatureTap(
-      dynamic featureId, Point<double> point, LatLng latLng, String layerId) {
+    Point<double> point,
+    LatLng latLng,
+    String id,
+    String layerId,
+    Annotation? annotation,
+  ) {
     final snackBar = SnackBar(
       content: Text(
-        'Tapped feature with id $featureId on layer $layerId',
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        'Tapped feature with id $id on layer $layerId at $latLng.\nAnnotation is ${annotation != null ? 'present' : 'null'}',
+        style: const TextStyle(fontSize: 14),
       ),
       backgroundColor: Theme.of(context).primaryColor,
     );
@@ -257,13 +297,14 @@ class LayerState extends State {
       minzoom: 11,
     );
 
-    bikeTimer = Timer.periodic(const Duration(milliseconds: 10), (t) {
-      controller.setGeoJsonSource("moving", _movingFeature(t.tick / 2000));
+    bikeTimer = Timer.periodic(const Duration(milliseconds: 10), (t) async {
+      await controller.setGeoJsonSource(
+          "moving", _movingFeature(t.tick / 2000));
     });
 
-    filterTimer = Timer.periodic(const Duration(seconds: 3), (t) {
+    filterTimer = Timer.periodic(const Duration(seconds: 3), (t) async {
       filteredId = filteredId == 0 ? 1 : 0;
-      controller.setFilter('fills', ['==', 'id', filteredId]);
+      await controller.setFilter('fills', ['==', 'id', filteredId]);
     });
   }
 
@@ -306,7 +347,7 @@ Map<String, dynamic> _movingFeature(double t) {
   };
 }
 
-final _fills = {
+final Map<String, Object> _fills = {
   "type": "FeatureCollection",
   "features": [
     {
@@ -371,7 +412,7 @@ final _fills = {
   ]
 };
 
-const _points = {
+const Map<String, Object> _points = {
   "type": "FeatureCollection",
   "features": [
     {
