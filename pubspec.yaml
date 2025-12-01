@@ -13,7 +13,7 @@ dev_dependencies:
 workspace:
   - scripts
   - maplibre_gl
-  - maplibre_gl_web
+  #- maplibre_gl_web
   - maplibre_gl_example
   - maplibre_gl_platform_interface
 
